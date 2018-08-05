@@ -1,0 +1,32 @@
+/*
+ * This script will identify the Duplicate business names in Business data
+ * 
+ */
+
+db = connect("localhost:27017/admin");
+db.auth({
+    user : "ds_root",
+    pwd: "xyz1236tgbnhy7"
+});
+
+db = db.getSiblingDB("data_in");
+
+db.leads_without_url.mapReduce(
+        
+        // mapper
+        function(){
+
+            emit({business_name:this.business.name},1)
+        },
+        
+        // reducer
+        function(key, value){
+            return Array.sum(value)
+        },  
+         // Output
+        {
+             out:"in_duplicate_business"
+        }
+        
+        );
+

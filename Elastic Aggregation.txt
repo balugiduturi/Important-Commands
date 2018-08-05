@@ -1,0 +1,8 @@
+107.22.170.45:9200/dp_projects/projects/_search?pretty
+
+{
+    "aggs":{
+        "avg_grade":{ "avg" :{ "field" : "adwords_data.semrush.AdwordsCost" } }
+    }
+
+}

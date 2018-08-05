@@ -1,0 +1,103 @@
+Elastic search steup in windows
+
+set  JAVA_HOME=C:\Program Files\Java\jdk1.8.0_31
+setx JAVA_HOME "%JAVA_HOME%" /m
+
+To start run the below command
+	D:\DonotDelete\elasticsearch\bin\elasticsearch.bat
+
+to check the Elastic in browser
+127.0.0.1:9200
+
+To find the listings
+	127.0.0.1:9200/cars/transactions/_search
+
+curl -XDELETE http://localhost:9200/zipcodes/
+{
+   "aggs": {
+      "colors": {
+         "terms": {
+            "field": "color"
+         },
+         "aggs": {
+            "avg_price": { 
+               "avg": {
+                  "field": "price"
+               }
+            },
+            "make": { 
+                "terms": {
+                    "field": "make" 
+                }
+            }
+         }
+      }
+   }
+}
+
+{
+    "aggs" : { 
+        "colors" : { 
+            "terms" : {
+              "field" : "color" 
+            },
+            
+            "aggs":{
+                "price_avg":{
+                    "avg" :{
+                        "field" : "price"
+                    }
+                },
+                "make": { 
+                "terms": {
+                    "field": "make" 
+                    }
+		"aggs":{
+			"min_price" : {"min" : {"field" : "price" }},
+			"max_price" : {"max" : {"field" : "price" }}
+		}
+                }
+            }
+        }
+    }
+}
+
+-------------------------------------------------03-02-2016-------------------------------------------------------
+
+
+{
+    "query":{
+        "filtered":{
+            "filter":{
+                "range":{"price":{"gte":10000}}
+            }
+        }
+    },
+    "aggs":{
+        "range_avg":{
+            "avg":{
+                "field":"price"
+            }
+        }
+    }
+}
+
+Filter bucket
+
+
+
+elasticdump \
+  --input=http://127.0.0.1:9200/cars/transactions \
+  --output=http://127.0.0.1:9200/cars/transactions_dump \
+  --type=mapping
+
+
+elasticdump --input=http://107.21.99.225:9200/salesforce --output=http://127.0.0.1:9200/salesforce --type=mapping
+
+elasticdump --input=http://107.21.99.225:9200/dp_projects --output=http://127.0.0.1:9200/dp_projects --type=analyzer
+
+elasticdump --input=http://107.21.99.225:9200/dp_projects --output=http://107.22.170.45:9200/dp_projects_dump --type=mapping
+
+elasticdump --input=http://107.21.99.225:9200/dp_projects --output=http://107.22.170.45:9200/dp_projects_dump --type=analyzer
+
+ --type=analyzer

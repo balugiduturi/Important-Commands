@@ -1,0 +1,32 @@
+mongo admin -u ds_root -p xyz1236tgbnhy7
+
+
+
+db.ds_projects_australia.distinct("business.anzsic_code",{"business.anzsic_code":{$exists:true}})
+
+
+db.ds_projects_australia.aggregate([{ $match:{"business.anzsic_code":{$exists:true}}},{ $group:{_id:"$business.anzsic_code",description:"$business.anzsic_description"}}])
+
+
+mongoexport -u ds_root -p xyz1236tgbnhy7 --db data --collection mr_australia_anzsic_codes_descs --type=csv --fields '_id.code,_id.desc,value' --out /data_vol_1/export/mr_australia_anzsic_codes_descs.csv
+
+db.databridge_segment_b.aggregate([{$match : {"NAICS_1":{$exists:true}}, { $group:{_id:"$NAICS_1"} }, {$sum:1}}])
+
+db.databridge_segment_b.aggregate([{$match : {"NAICS_1":{$exists:true}}}, { $group:{_id:"$NAICS_1", cnt:{$sum:1}} }, {$sort : {"cnt":-1}}])
+
+
+awk '!x[$7]++' FS="\t" p4_competitors_search_results.tsv > p4_competitors_search_results_non_duplicate.tsv
+
+cat bb_non_duplicate_utf8.tsv | grep toy | more
+sed -i -- 's/\\\"R\\\"/ /g' bb_non_duplicate_utf8.tsv
+sed -i -- 's/"//g' p4_competitors_search_results_non_duplicate.tsv
+
+sed -i -- 's/"//g' p4_competitors_search_results_non_duplicate.tsv
+
+
+mongoimport -u ds_root -p xyz1236tgbnhy7 -d ds -c segment_data_d_contacts_set7_valid  --headerline --type=tsv < segment_d_contacts_set8.tsv
+
+mongodump -u ds_root -p xyz1236tgbnhy7 -d data_us -c leads_with_url -o /data_new/backups/data_us_back_up_16_02_2016/
+
+mongorestore -u ds_root -p xyz1236tgbnhy7 -d data -c databridge_projects_file_system  /data_new/backups/data_us_backup_01_11_2015/ds/databridge_projects.bson
+

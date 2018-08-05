@@ -1,0 +1,57 @@
+D:\wamp\www\ds_emr\Modules\DataResearch\factual_data_merge.php
+
+nohup php update_postalCode_countryCode.php > nohup.out &
+
+split -dl 5000000 --additional-suffix=.txt data_us_page_analysis_1_19-09-2015.csv test_split
+
+split -dl 5000000 BuzzBoard_Sites_1509.txt BuzzBoard_Sites_Split_
+
+awk '!x[$7]++' FS="\t" p4_competitors_search_results.tsv > p4_competitors_search_results_non_duplicate.tsv
+
+cat bb_non_duplicate_utf8.tsv | grep toy | more
+sed -i -- 's/\\\"R\\\"/ /g' bb_non_duplicate_utf8.tsv
+sed -i -- 's/"//g' p4_competitors_search_results_non_duplicate.tsv
+
+mongodump -u ds_root -p xyz1236tgbnhy7 -d data_us --excludeCollection system.users  --out /data_new/mongoexport_files/mongodump_2015-09-17
+
+mongodump -u team -p team_123 -d data_us --excludeCollection system.users  --out /data_new/mongoexport_files/mongodump_2015-09-17
+
+db.createUser({user: "ds_root",pwd: "xyz1236tgbnhy7", roles:[{"role":"readWrite","db":"zipcodes"}]})
+
+import data from another server
+
+mongoimport -v -u ds_root -p xyz1236tgbnhy7 -d data -c file_system_analysis_log_2015_10_16 --file /apps/hadoop/temp/file_system_databridge_1_16-10-2015.csv -f 'analysis_id,website' --type=csv --ignoreBlanks --host 23.23.245.229:27017
+
+
+To view single file in tar
+tar -axf hadoop.tar hadoop/Core/api_keys.php -O
+
+
+Convert String field to Integer:
+
+db.db-name.find({field-name: {$exists: true}}).forEach(function(obj) { 
+    obj.field-name = new NumberInt(obj.field-name);
+    db.db-name.save(obj);
+});
+Convert Integer field to String:
+
+db.db-name.find({field-name: {$exists: true}}).forEach(function(obj) {
+    obj.field-name = "" + obj.field-name;
+    db.db-name.save(obj);
+});
+
+Top 100 
+db.ark_data_41.aggregate({"$group":{"_id":{"list_id":"$list_id", "list_name":"$list_name"}, "cnt":{$sum:1}}},{"$sort":{cnt:-1}})
+
+copy colection from one database to another database collection
+db.<collection_name>.find().forEach(function(d){ db.getSiblingDB('<new_database>')['<collection_name>'].insert(d); });
+db.data_zip_codes.find({"country":"US"}).forEach(function(d){db.getSiblingDB('zipcodes')['zipcodes_data'].insert(d)})
+
+
+xyz1236tgbnhy7
+xyz1$3^nhy7
+mongostat -u dp_root -p 'xyz1236tgbnhy7' --authenticationDatabase=admin
+mongotop -u dp_root -p xyz1236tgbnhy7 --authenticationDatabase=admin
+
+
+sed 's/|/\t/g' Firmographics_test.txt
